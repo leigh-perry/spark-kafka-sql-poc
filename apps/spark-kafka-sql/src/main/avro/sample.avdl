@@ -1,0 +1,12 @@
+@namespace("sample")
+protocol Sample {
+
+  record SampleKey {
+    string userId;
+  }
+
+  record SampleValue {
+    string userName;
+    long accountNumber;
+  }
+}

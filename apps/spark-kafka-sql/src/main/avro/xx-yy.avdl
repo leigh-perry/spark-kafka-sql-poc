@@ -1,0 +1,27 @@
+@namespace("xxyy")
+protocol RowXxYy {
+
+  record RowXxKey {
+    string userId;
+  }
+
+  record RowXxValue {
+    string userid;
+    string name;
+    string gender;
+    string regionid;
+  }
+
+////
+
+  record RowYyKey {
+    string userId;
+  }
+
+  record RowYyValue {
+    string userid;
+    int refcount;
+    union { int, null } optional;
+  }
+
+}
