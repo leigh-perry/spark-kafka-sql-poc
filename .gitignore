@@ -1,12 +1,13 @@
+.bloop
+.metals
+.vscode
 .terraform
 *.pem
 app.*.log.gz
 *.tfstate*
 _ref
-temp*.json
 cassandra_data/
 custom-plugins/
-.idea
 
 # Created by .ignore support plugin (hsz.mobi)
 ### JetBrains template
@@ -15,6 +16,7 @@ custom-plugins/
 
 # User-specific stuff:
 .idea
+.idea/workspace.xml
 .idea/tasks.xml
 
 # Sensitive or high-churn files:
@@ -126,6 +128,3 @@ Icon
 Network Trash Folder
 Temporary Items
 .apdisk
-
-**/.ghc.*
-**/dist-newstyle

@@ -1,0 +1,56 @@
+version: '2'
+services:
+  zookeeper:
+    image: confluentinc/cp-zookeeper:latest
+    ports:
+      - "2181:2181"
+    hostname: zookeeper
+    environment:
+      ZOOKEEPER_CLIENT_PORT: 2181
+      ZOOKEEPER_TICK_TIME: 2000
+
+  kafka:
+    image: 'confluentinc/cp-kafka:latest'
+    ports:
+      - "9092:9092"
+    hostname: kafka
+    stop_grace_period: 120s
+    depends_on:
+      - zookeeper
+    environment:
+      COMPONENT: kafka
+      KAFKA_BROKER_ID: 1001
+      KAFKA_RESERVED_BROKER_MAX_ID: 10000
+      KAFKA_ZOOKEEPER_CONNECT: 'zookeeper:2181'
+      KAFKA_ADVERTISED_LISTENERS: 'PLAINTEXT://kafka:9092'
+      KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
+      KAFKA_TRANSACTION_STATE_LOG_REPLICATION_FACTOR: 1
+      KAFKA_TRANSACTION_STATE_LOG_MIN_ISR: 1
+      KAFKA_GROUP_INITIAL_REBALANCE_DELAY_MS: 0
+      KAFKA_AUTO_CREATE_TOPICS_ENABLE: 'false'
+      KAFKA_JMX_OPTS: '-Dcom.sun.management.jmxremote=true -Dcom.sun.management.jmxremote.authenticate=false -Dcom.sun.management.jmxremote.ssl=false -Djava.rmi.server.hostname=broker -Djava.net.preferIPv4Stack=true -Dcom.sun.management.jmxremote.rmi.port=8500'
+
+  schemaregistry:
+    image: confluentinc/cp-schema-registry:latest
+    hostname: schemaregistry
+    ports:
+      - "8081:8081"
+    depends_on:
+      - zookeeper
+      - kafka
+    environment:
+      SCHEMA_REGISTRY_HOST_NAME: schemaregistry
+      SCHEMA_REGISTRY_KAFKASTORE_CONNECTION_URL: zookeeper:2181
+
+  kafka-create-topics:
+    image: 'confluentinc/cp-kafka:latest'
+    depends_on:
+      - kafka
+    command: "bash -c 'echo Waiting for Kafka to be ready... \
+              && cub kafka-ready -b kafka:9092 1 20 \
+              && kafka-topics --create --if-not-exists --zookeeper zookeeper:2181 --partitions 16 --replication-factor 1 --topic yy \
+              && kafka-topics --create --if-not-exists --zookeeper zookeeper:2181 --partitions 16 --replication-factor 1 --topic xx \
+              && sleep infinity'"
+    environment:
+      KAFKA_BROKER_ID: ignored
+      KAFKA_ZOOKEEPER_CONNECT: ignored

@@ -1,0 +1,12 @@
+[
+  {
+    "Name": "MiniBatchBronze",
+    "Args": [
+      "/bin/sh",
+      "-c",
+      "spark-submit --conf spark.driver.memory=3G --conf spark.executor.memory=2G --conf spark.executor.instances=1 --conf spark.executor.cores=1 --class poc.spark.deltas.app.BronzeIngestionJob s3://sql-transform-poc-jars/kafka-spark-deltas-assembly-0.1.0-SNAPSHOT.jar"
+    ],
+    "Jar": "command-runner.jar",
+    "ActionOnFailure": "CONTINUE"
+  }
+]
